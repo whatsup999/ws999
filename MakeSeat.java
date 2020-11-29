@@ -113,7 +113,7 @@ class Seatselection extends JPanel implements ActionListener {
        else if( s == "회원 관리" )  {// 회원 관리 버튼 클릭 시 4번:회원 관리 창 띄우기
        }
        else { // 나머지 좌석 버튼이 눌렸을 때 담요, 독서대 등 대여 여부 확인 창 띄우기
-          SeatCheck sc = new SeatCheck("확인창");
+           SeatCheck sc = new SeatCheck("확인창", this);
           sc.buttonnumber(i);
           sc.setTitle(i+"번 좌석 요청");
           sc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -133,8 +133,10 @@ class SeatCheck extends JFrame implements ActionListener {
       JLabel jl; // 더 필요한 것이 있는지 묻는 레이블
       JCheckBox blanket, bookdesk;   // 담요, 독서대 체크박스 버튼
       JButton in, out, back;     // 확인, 퇴실, 뒤로 가기 버튼
-       
-      SeatCheck (String title) { 
+      Seatselection ss;
+
+      SeatCheck (String title, Seatselection ss) {
+        this.ss = ss;
         Container ct = getContentPane();
         ct.setLayout(new BorderLayout(0,5));
         JPanel top = new JPanel();  //상단 패널
@@ -163,7 +165,6 @@ class SeatCheck extends JFrame implements ActionListener {
          dispose();
        }
        else if( s == "확인" )  {// 데이터베이스에 데이터 입력 후 버튼 색 변경
-       Seatselection ss = new Seatselection();
        ss.enter(i);
        System.out.println(ss.btn.length);
        dispose();
@@ -183,5 +184,16 @@ class SeatCheck extends JFrame implements ActionListener {
        
         
         
-  
-      
+ 
+// * 에러 원인
+// 1) MakeSeat에서 설정한 Seatselection 
+// Seatselection pn = new Seatselection();
+//
+// 2) SeatCheck에서 설정한 SeatCheck
+// Seatselection ss = new Seatselection();
+//
+// MakeSeat과 SeatCheck의 Seatselection는 다름.
+// MakeSeat의 버튼을 표시중인데 SeatCheck의 버튼의 배경을 바꿔주고 있음.
+//
+// * 수정 내용
+// MakeSeat에서 설정한 Seatselection을 SeatCheck에서도 사용하게도록 변경
